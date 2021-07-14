@@ -1,25 +1,55 @@
-import logo from './logo.svg';
 import './App.css';
+import React from "react";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class Slider extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {'currentPosition': 1}
+        this.elements = props.urls;
+        this.moveLeft = this.moveLeft.bind(this);
+        this.moveRight = this.moveRight.bind(this);
+        console.log(this.elements)
+    }
+
+    moveRight() {
+        if (this.state.currentPosition + 1 === this.elements.length) {
+            this.setState({'currentPosition': 0})
+        } else {
+            this.setState(prevState => ({'currentPosition': prevState.currentPosition + 1}))
+        }
+    }
+
+    moveLeft() {
+        if (this.state.currentPosition - 1 === -1) {
+            this.setState({'currentPosition': this.elements.length - 1})
+        } else {
+            this.setState(prevState => ({'currentPosition': prevState.currentPosition - 1}))
+        }
+    }
+
+    render() {
+        return (
+            <div className='slider'>
+                <SliderButton text='Влево' onClick={this.moveLeft}/>
+                <SliderElement url={this.elements[this.state.currentPosition]} className={'slider-element'}/>
+                <SliderButton text='Вправо' onClick={this.moveRight}/>
+            </div>
+        )
+    }
 }
 
-export default App;
+function SliderElement(props) {
+    return (
+        <img src={props.url} width='200px' height='200px' className='slider-image' alt='image'/>
+    )
+}
+
+function SliderButton(props) {
+    return (
+        <div className='btn-container'>
+            <button className='btn' onClick={props.onClick}>{props.text}</button>
+        </div>
+    )
+}
+
+export default Slider;
